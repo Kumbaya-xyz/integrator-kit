@@ -1,0 +1,23 @@
+{
+  "chainId": 6343,
+  "chainName": "MegaETH Testnet",
+  "rpc": "https://timothy.megaeth.com",
+  "blockExplorer": "https://megaeth-testnet-v2.blockscout.com/",
+  "contracts": {
+    "WETH9": "0x4200000000000000000000000000000000000006",
+    "UniswapV3Factory": "0x619fb6C12c36b57a8bAb05e98F42C43745DCf69f",
+    "NonfungiblePositionManager": "0xa204A97EF8Bd2E3198f19EB5a804680467BD85f5",
+    "SwapRouter02": "0xE060C6412Cb9E3C85dDdED44AAd1DC9fAFfb5cD9",
+    "UniversalRouter": "0xCdd0a5Ac12820AC7299b72Dc2126687895267298",
+    "QuoterV2": "0x49D39c2Ca480F8C1e2a623E457756b237EB07a4b",
+    "Permit2": "0x2D11a87b78258fD3a246eDd1E37B6779451Ff111",
+    "Multicall2": "0xd268c9df34415a1AC155b0F2D9bb8D5d26927855",
+    "TickLens": "0x571e5072f8d068b67395d5AE8C090149ED361509",
+    "V3Migrator": "0x5237eF20DBbC7285573743d21267AC223cf24453",
+    "UniswapV3Staker": "0x9A90E35acBAaFE48Bb6aF2312E15033673bAa928",
+    "ProxyAdmin": "0x4FCC1331E67ea7618799b786d208B40edE88bfA9",
+    "NonfungibleTokenPositionDescriptor": "0xCcFfaA6CFA22269c39ffd9fb2C2cfAa4919ae782",
+    "DescriptorProxy": "0x3d5af930da0c72E1EFe35F5EcFf0D008Eb7ced16"
+  },
+  "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
+}
