@@ -1,13 +1,15 @@
 # Kumbaya DEX Integrator Info
 
-## Network
+## Networks
 
-- Chain: MegaETH Testnet (`6343`, hex `0x18c7`)
+### MegaETH Testnet (v2)
+
+- Chain ID: `6343` (`0x18c7`)
 - RPC: `https://timothy.megaeth.com/rpc`
 - Explorer: https://megaeth-testnet-v2.blockscout.com/
 - Pool init code hash: `0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54`
 
-## Key Contracts
+**Key Contracts**
 
 | Contract                   | Address                                      |
 | -------------------------- | -------------------------------------------- |
@@ -32,3 +34,27 @@ See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator,
 ## Provenance
 
 - ABIs are trimmed to ABI-only output from the official Uniswap packages listed above.
+
+## MegaETH Mainnet Deployment
+
+- Chain ID: `4326`
+- RPC / Explorer: _(not provided)_
+
+### Key Contracts (from `mainnetAddresses.json`)
+
+| Contract                                      | Address                                      |
+| --------------------------------------------- | -------------------------------------------- |
+| `UniswapV3Factory`                            | `0xf2e46138d197602CFCc8B1Dd0284DF09EfD333A3` |
+| `NonfungiblePositionManager`                  | `0x8bd2974FcA79BbadC5Cb4E452F505E0Be6Ea740c` |
+| `SwapRouter02`                                | `0x6A4A9D98C3bC9B94A07A46bD2ecD12c055C4B7B8` |
+| `UniversalRouter`                             | `0x862bf267C4bD1d5ce83bCc9daecE4d6570bf5338` |
+| `QuoterV2`                                    | `0xfb3Eb7CAb0a8fAA4bB82c733CF527E927925b960` |
+| `UnsupportedProtocol`                         | `0x6D7c320d076F59ca7ABa12bf9C7a20827D073c3a` |
+| `Multicall2`                                  | `0xA9AEDC1CD2b734760F2268fe9ECA6f8C1A5B899D` |
+| `ProxyAdmin`                                  | `0x9802270F8a9d2edfD549b5f1c4B119233983D945` |
+| `TickLens`                                    | `0xB18Bfe5ff3Bc9C6619ca4F100192d0Bc110d2468` |
+| `NFTDescriptor (v1.3.0)`                      | `0x2CCBc45d87E57EF4dcFAABFF321F93E1d1c2ed97` |
+| `NonfungibleTokenPositionDescriptor (v1.3.0)` | `0x9930d2308D8787103191e1903D96ac2Fd0dBBe23` |
+| `DescriptorProxy`                             | `0xa7D469B1128b5Cd7779b78ee0bf7484df5b3d37f` |
+| `V3Migrator`                                  | `0xa2b291651DE6EA0B67fD32DFdC31541A34064ac0` |
+| `UniswapV3Staker`                             | `0x5E55b2c0094FD2158B12C9DcDaEbD6E5221Beb1F` |
