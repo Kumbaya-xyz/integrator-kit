@@ -14,11 +14,12 @@
     "Multicall2": "0xA9AEDC1CD2b734760F2268fe9ECA6f8C1A5B899D",
     "TickLens": "0xB18Bfe5ff3Bc9C6619ca4F100192d0Bc110d2468",
     "V3Migrator": "0xa2b291651DE6EA0B67fD32DFdC31541A34064ac0",
-    "UniswapV3Staker": "0x5E55b2c0094FD2158B12C9DcDaEbD6E5221Beb1F",
+    "v3StakerAddress": "0x5E55b2c0094FD2158B12C9DcDaEbD6E5221Beb1F",
     "ProxyAdmin": "0x9802270F8a9d2edfD549b5f1c4B119233983D945",
-    "NonfungibleTokenPositionDescriptor": "0x9930d2308D8787103191e1903D96ac2Fd0dBBe23",
+    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x9930d2308D8787103191e1903D96ac2Fd0dBBe23",
     "DescriptorProxy": "0xa7D469B1128b5Cd7779b78ee0bf7484df5b3d37f",
-    "UnsupportedProtocol": "0x6D7c320d076F59ca7ABa12bf9C7a20827D073c3a"
+    "UnsupportedProtocol": "0x6D7c320d076F59ca7ABa12bf9C7a20827D073c3a",
+    "nftDescriptorLibraryAddressV1_3_0": "0x2CCBc45d87E57EF4dcFAABFF321F93E1d1c2ed97"
   },
   "poolInitCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
 }
