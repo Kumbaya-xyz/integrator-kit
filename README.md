@@ -44,17 +44,17 @@ See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator,
 
 | Contract                                      | Address                                      |
 | --------------------------------------------- | -------------------------------------------- |
-| `UniswapV3Factory`                            | `0xf2e46138d197602CFCc8B1Dd0284DF09EfD333A3` |
-| `NonfungiblePositionManager`                  | `0x8bd2974FcA79BbadC5Cb4E452F505E0Be6Ea740c` |
-| `SwapRouter02`                                | `0x6A4A9D98C3bC9B94A07A46bD2ecD12c055C4B7B8` |
-| `UniversalRouter`                             | `0x862bf267C4bD1d5ce83bCc9daecE4d6570bf5338` |
-| `QuoterV2`                                    | `0xfb3Eb7CAb0a8fAA4bB82c733CF527E927925b960` |
-| `UnsupportedProtocol`                         | `0x6D7c320d076F59ca7ABa12bf9C7a20827D073c3a` |
-| `Multicall2`                                  | `0xA9AEDC1CD2b734760F2268fe9ECA6f8C1A5B899D` |
-| `ProxyAdmin`                                  | `0x9802270F8a9d2edfD549b5f1c4B119233983D945` |
-| `TickLens`                                    | `0xB18Bfe5ff3Bc9C6619ca4F100192d0Bc110d2468` |
-| `NFTDescriptor (v1.3.0)`                      | `0x2CCBc45d87E57EF4dcFAABFF321F93E1d1c2ed97` |
-| `NonfungibleTokenPositionDescriptor (v1.3.0)` | `0x9930d2308D8787103191e1903D96ac2Fd0dBBe23` |
-| `DescriptorProxy`                             | `0xa7D469B1128b5Cd7779b78ee0bf7484df5b3d37f` |
-| `V3Migrator`                                  | `0xa2b291651DE6EA0B67fD32DFdC31541A34064ac0` |
-| `UniswapV3Staker`                             | `0x5E55b2c0094FD2158B12C9DcDaEbD6E5221Beb1F` |
+| `UniswapV3Factory`                            | `TBA` |
+| `NonfungiblePositionManager`                  | `TBA` |
+| `SwapRouter02`                                | `TBA` |
+| `UniversalRouter`                             | `TBA` |
+| `QuoterV2`                                    | `TBA` |
+| `UnsupportedProtocol`                         | `TBA` |
+| `Multicall2`                                  | `TBA` |
+| `ProxyAdmin`                                  | `TBA` |
+| `TickLens`                                    | `TBA` |
+| `NFTDescriptor (v1.3.0)`                      | `TBA` |
+| `NonfungibleTokenPositionDescriptor (v1.3.0)` | `TBA` |
+| `DescriptorProxy`                             | `TBA` |
+| `V3Migrator`                                  | `TBA` |
+| `UniswapV3Staker`                             | `TBA` |
