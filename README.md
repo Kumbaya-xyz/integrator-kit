@@ -1,4 +1,8 @@
-# Kumbaya DEX Integrator Info
+![Kumbaya Logo](https://github.com/Kumbaya-xyz/brand-assets/blob/main/logos/red/full-200.png?raw=true)
+
+# Kumbaya DEX Integrator Kit
+
+Integration resources for building on Kumbaya DEX - contract addresses, ABIs, and deployment information.
 
 ## Networks
 
@@ -7,33 +11,35 @@
 - Chain ID: `6343` (`0x18c7`)
 - RPC: `https://timothy.megaeth.com/rpc`
 - Explorer: https://megaeth-testnet-v2.blockscout.com/
-- Pool init code hash: `0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54`
+- Pool init code hash: `0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7`
 
 **Key Contracts**
 
 | Contract                   | Address                                      |
 | -------------------------- | -------------------------------------------- |
-| UniswapV3Factory           | `0x619fb6C12c36b57a8bAb05e98F42C43745DCf69f` |
-| NonfungiblePositionManager | `0xa204A97EF8Bd2E3198f19EB5a804680467BD85f5` |
-| SwapRouter02               | `0xE060C6412Cb9E3C85dDdED44AAd1DC9fAFfb5cD9` |
-| UniversalRouter            | `0xCdd0a5Ac12820AC7299b72Dc2126687895267298` |
-| QuoterV2                   | `0x49D39c2Ca480F8C1e2a623E457756b237EB07a4b` |
-| Permit2                    | `0x2D11a87b78258fD3a246eDd1E37B6779451Ff111` |
+| UniswapV3Factory           | `0x53447989580f541bc138d29A0FcCf72AfbBE1355` |
+| NonfungiblePositionManager | `0x367f9db1F974eA241ba046b77B87C58e2947d8dF` |
+| SwapRouter02               | `0x8268DC930BA98759E916DEd4c9F367A844814023` |
+| UniversalRouter            | `0x7E6c4Ada91e432efe5F01FbCb3492Bd3eb7ccD2E` |
+| QuoterV2                   | `0xfb230b93803F90238cB03f254452bA3a3b0Ec38d` |
+| Permit2                    | `0x000000000022D473030F116dDEE9F6B43aC78BA3` |
 | WETH9                      | `0x4200000000000000000000000000000000000006` |
 
 See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator, V3Staker, descriptors, ProxyAdmin).
 
 ## ABIs Provided (source)
 
-- Core: `UniswapV3Factory.json`, `UniswapV3Pool.json` (`@uniswap/v3-core@1.0.0`)
-- Periphery: `QuoterV2.json`, `SwapRouter02.json`, `NonfungiblePositionManager.json`, `V3Migrator.json`, `TickLens.json`, `Multicall2.json` (`@uniswap/v3-periphery@1.4.x`)
-- Incentives: `UniswapV3Staker.json` (`@uniswap/v3-staker@1.0.0`)
-- Tokens: `ERC20.json`
-- Permits and routing: `Permit2.json` (`@uniswap/permit2` artifact), `UniversalRouter.json` (`@uniswap/universal-router@2.0.0`)
+- Core: `UniswapV3Factory.json`, `UniswapV3Pool.json` (`@kumbaya_xyz/v3-core`)
+- Periphery: `NonfungiblePositionManager.json`, `V3Migrator.json`, `TickLens.json`, `Multicall2.json` (`@kumbaya_xyz/v3-periphery`)
+- Swap Router: `QuoterV2.json`, `SwapRouter02.json` (`@kumbaya_xyz/swap-router-contracts`)
+- Incentives: `UniswapV3Staker.json` (`@kumbaya_xyz/v3-staker`)
+- Routing: `UniversalRouter.json` (`@kumbaya_xyz/universal-router`)
+- Permits: `Permit2.json` (IPermit2 interface from permit2 lib)
+- Tokens: `ERC20.json` (OpenZeppelin)
 
 ## Provenance
 
-- ABIs are trimmed to ABI-only output from the official Uniswap packages listed above.
+- ABIs are extracted from Kumbaya contract build artifacts and verified against deployed bytecode on MegaETH testnet.
 
 ## MegaETH Mainnet Deployment
 
