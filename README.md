@@ -39,7 +39,27 @@ See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator,
 
 ## Provenance
 
-- ABIs are extracted from Kumbaya contract build artifacts and verified against deployed bytecode on MegaETH testnet.
+ABIs are extracted from Kumbaya contract build artifacts and verified against deployed bytecode on MegaETH testnet.
+
+## Regenerating ABIs
+
+Use the fetch script to regenerate ABIs from Kumbaya build artifacts:
+
+```bash
+# Preview what would be fetched
+npx tsx scripts/fetch-abis.ts --dry-run
+
+# Fetch all ABIs
+npx tsx scripts/fetch-abis.ts
+
+# For Permit2, set your Etherscan API key (free at etherscan.io)
+ETHERSCAN_API_KEY=your-key npx tsx scripts/fetch-abis.ts
+```
+
+The script sources ABIs from:
+1. Kumbaya build artifacts (`../v3-core`, `../v3-periphery`, `../swap-router-contracts`, `../v3-staker`, `../universal-router`)
+2. Etherscan mainnet for canonical Permit2 deployment
+3. Block explorer fallback for verified contracts
 
 ## MegaETH Mainnet Deployment
 
