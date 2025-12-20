@@ -61,6 +61,27 @@ The script sources ABIs from:
 2. Etherscan mainnet for canonical Permit2 deployment
 3. Block explorer fallback for verified contracts
 
+## Bytecode Verification
+
+Compare deployed Kumbaya contract bytecode against canonical Uniswap V3 on Ethereum mainnet. This masks out immutables (constructor args) to verify the logic is identical.
+
+```bash
+# Install dependencies
+npm install @ethersproject/providers tsx
+
+# Compare testnet deployment
+npx tsx scripts/compare-bytecode.ts testnet
+
+# Compare mainnet deployment (when available)
+npx tsx scripts/compare-bytecode.ts mainnet
+```
+
+The script:
+- Fetches bytecode from both Kumbaya (MegaETH) and Uniswap (Ethereum)
+- Masks out constructor arguments / immutables
+- Compares the remaining logic bytecode
+- Verifies the correct `POOL_INIT_CODE_HASH` is embedded in each contract
+
 ## MegaETH Mainnet Deployment
 
 - Chain ID: `4326`
