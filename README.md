@@ -118,3 +118,53 @@ To use Kumbaya packages as drop-in replacements for Uniswap packages:
     "@uniswap/universal-router-sdk": "npm:@kumbaya_xyz/universal-router-sdk@^4.25.0"
   }
 }
+```
+
+## On-Chain Integration Tests
+
+The `testnet-tests/` directory contains Foundry-based integration tests that run against the deployed contracts on MegaETH Testnet. These tests verify:
+
+- **Contract Deployment**: All core contracts are deployed and accessible
+- **CREATE2 Pool Addresses**: The pool init code hash correctly computes pool addresses matching what the factory creates
+- **Periphery Integration**: QuoterV2, SwapRouter02, and NFTPositionManager can find and interact with pools
+- **Full Stack Consistency**: End-to-end verification that all components agree on pool addresses
+
+### Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) installed
+- Access to MegaETH Testnet RPC
+
+### Running the Tests
+
+```bash
+cd testnet-tests
+
+# Install dependencies
+forge install
+
+# Run all tests against MegaETH Testnet
+forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+```
+
+### Test Coverage
+
+| Test | Description |
+|------|-------------|
+| `test_AllContractsDeployed` | Verifies all core contracts have code |
+| `test_FactoryFeeAmounts` | Checks fee tier configurations (100, 500, 3000, 10000) |
+| `test_PoolInitCodeHash_*` | Validates CREATE2 address computation matches factory |
+| `test_NewPoolMatchesCREATE2` | Creates a new pool and verifies address matches pre-computed |
+| `test_QuoterV2_PoolAddressComputation` | Confirms QuoterV2 can find and quote pools |
+| `test_FullStack_PoolAddressConsistency` | End-to-end verification of all components |
+| `test_WrapETH` / `test_UnwrapWETH` | WETH9 deposit/withdraw functionality |
+| `test_QuoteSwap` | Get a quote for WETH -> USDC swap |
+
+### Verifying Pool Init Code Hash
+
+The tests use the Kumbaya pool init code hash to compute pool addresses via CREATE2:
+
+```solidity
+bytes32 constant POOL_INIT_CODE_HASH = 0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7;
+```
+
+If you're integrating with Kumbaya DEX, ensure your SDK/code uses this hash instead of the default Uniswap hash

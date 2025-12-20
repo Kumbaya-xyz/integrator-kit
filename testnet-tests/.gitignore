@@ -1,0 +1,10 @@
+# Foundry build artifacts
+out/
+cache/
+broadcast/
+
+# Dependencies (can be reinstalled with forge install)
+lib/
+
+# Lock file (regenerated on forge install)
+foundry.lock

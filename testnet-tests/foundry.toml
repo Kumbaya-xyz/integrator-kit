@@ -1,0 +1,11 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.20"
+
+[rpc_endpoints]
+megaeth_testnet = "https://timothy.megaeth.com/rpc"
+
+[etherscan]
+megaeth_testnet = { key = "", url = "https://megaeth-testnet-v2.blockscout.com/api" }
