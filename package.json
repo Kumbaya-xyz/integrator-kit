@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@ethersproject/providers": "^5.8.0"
+  }
+}

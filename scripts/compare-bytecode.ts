@@ -9,7 +9,7 @@
  *   npx tsx scripts/compare-bytecode.ts mainnet   # Compare MegaETH mainnet
  */
 
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -98,6 +98,17 @@ const UNISWAP_ADDRESSES_TO_ZERO: Record<string, string[]> = {
   SwapRouter02: [
     '5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f', // Uniswap v2 factory
   ],
+  UniversalRouter: [
+    '000000000004444c5dc75cb358380d2e3de08a90', // Uniswap v4PoolManager
+    '00000000bd216513d74c8cf14cf4747e6aaa6420', // Uniswap v4PositionManager
+    '5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f', // Uniswap v2Factory
+  ],
+}
+
+// Contracts with expected differences due to different compilation or features
+const CONTRACTS_WITH_EXPECTED_DIFFERENCES: Record<string, string> = {
+  UniswapV3Factory: 'Minor difference in fee tier encoding (0x02 vs 0x04)',
+  UniversalRouter: 'Different size due to V4 placeholder handling and UnsupportedProtocol pattern',
 }
 
 // Load addresses from JSON file
@@ -257,8 +268,9 @@ async function main() {
     process.exit(1)
   }
 
-  const kumbayaProvider = new JsonRpcProvider(rpc)
-  const ethereumProvider = new JsonRpcProvider(RPC_ENDPOINTS.ethereum)
+  const kumbayaChainId = network === 'testnet' ? 6343 : 4326
+  const kumbayaProvider = new StaticJsonRpcProvider(rpc, { chainId: kumbayaChainId, name: `megaeth-${network}` })
+  const ethereumProvider = new StaticJsonRpcProvider(RPC_ENDPOINTS.ethereum, { chainId: 1, name: 'mainnet' })
   const kumbayaImmutables = buildKumbayaImmutables(contracts, poolInitCodeHash)
 
   console.log('='.repeat(80))
@@ -305,35 +317,38 @@ async function main() {
       console.log(`   Kumbaya size: ${kumbayaSize.toLocaleString()} bytes`)
       console.log(`   Uniswap size: ${uniswapSize.toLocaleString()} bytes`)
 
-      // Masked comparison
+      // Masked comparison (strip metadata first, then mask immutables)
       const kImmutables = kumbayaImmutables[contractName] || []
       const uImmutables = UNISWAP_IMMUTABLES[contractName] || []
       const normalizedUniswap = normalizeUniswapBytecode(uniswapCode, contractName)
-      const maskedKumbaya = maskValues(kumbayaCode, kImmutables)
-      const maskedUniswap = maskValues(normalizedUniswap, uImmutables)
-      const maskedComparison = compareBytecode(maskedKumbaya, maskedUniswap)
 
-      console.log('\n   [COMPARISON] MASKED (immutables replaced):')
-      if (maskedComparison.identical) {
-        console.log('      [PASS] IDENTICAL - Logic matches (only immutables differ)')
+      // Strip CBOR metadata before comparison (removes compiler version differences)
+      const strippedKumbaya = '0x' + stripMetadata(kumbayaCode)
+      const strippedUniswap = '0x' + stripMetadata(normalizedUniswap)
+      const maskedKumbaya = maskValues(strippedKumbaya, kImmutables)
+      const maskedUniswap = maskValues(strippedUniswap, uImmutables)
+      const comparison = compareBytecode(maskedKumbaya, maskedUniswap)
+
+      console.log('\n   [COMPARISON] (metadata stripped, immutables masked):')
+      if (comparison.identical) {
+        console.log('      [PASS] IDENTICAL - Logic bytecode matches')
       } else {
-        console.log(`      [FAIL] ${maskedComparison.differences.length} byte(s) differ after masking`)
+        console.log(`      [FAIL] ${comparison.differences.length} byte(s) differ`)
 
-        const strippedKumbaya = stripMetadata(maskedKumbaya)
-        const strippedUniswap = stripMetadata(maskedUniswap)
-        const strippedComparison = compareBytecode('0x' + strippedKumbaya, '0x' + strippedUniswap)
+        // Always show the differences
+        const diffToShow = comparison.differences.slice(0, 5)
+        console.log('\n      First differences (position: kumbaya -> uniswap):')
+        for (const diff of diffToShow) {
+          console.log(`        ${diff.position.toString().padStart(6)}: 0x${diff.kumbaya} -> 0x${diff.uniswap}`)
+        }
+        if (comparison.differences.length > 5) {
+          console.log(`        ... and ${comparison.differences.length - 5} more`)
+        }
 
-        if (strippedComparison.identical) {
-          console.log('      [PASS] IDENTICAL after stripping metadata - only CBOR hash differs')
-        } else {
-          const diffToShow = maskedComparison.differences.slice(0, 5)
-          console.log('\n      First differences (position: kumbaya -> uniswap):')
-          for (const diff of diffToShow) {
-            console.log(`        ${diff.position.toString().padStart(6)}: 0x${diff.kumbaya} -> 0x${diff.uniswap}`)
-          }
-          if (maskedComparison.differences.length > 5) {
-            console.log(`        ... and ${maskedComparison.differences.length - 5} more`)
-          }
+        // Show expected difference note if applicable
+        const expectedReason = CONTRACTS_WITH_EXPECTED_DIFFERENCES[contractName]
+        if (expectedReason) {
+          console.log(`\n      [NOTE] Expected difference: ${expectedReason}`)
         }
       }
     } catch (error) {

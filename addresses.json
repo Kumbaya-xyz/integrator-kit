@@ -1,7 +1,7 @@
 {
   "chainId": 6343,
   "chainName": "MegaETH Testnet",
-  "rpc": "https://timothy.megaeth.com",
+  "rpc": "https://timothy.megaeth.com/rpc",
   "blockExplorer": "https://megaeth-testnet-v2.blockscout.com/",
   "contracts": {
     "WETH9": "0x4200000000000000000000000000000000000006",
