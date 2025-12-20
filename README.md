@@ -84,3 +84,37 @@ The script sources ABIs from:
 | `DescriptorProxy`                             | `TBA` |
 | `V3Migrator`                                  | `TBA` |
 | `UniswapV3Staker`                             | `TBA` |
+
+## NPM Packages
+
+Kumbaya publishes forked Uniswap SDKs with MegaETH support:
+
+| Package | Description |
+|---------|-------------|
+| [@kumbaya_xyz/sdk-core](https://www.npmjs.com/package/@kumbaya_xyz/sdk-core) | Core SDK with chain definitions and token types |
+| [@kumbaya_xyz/v3-sdk](https://www.npmjs.com/package/@kumbaya_xyz/v3-sdk) | V3 pool SDK with pool init code hash |
+| [@kumbaya_xyz/router-sdk](https://www.npmjs.com/package/@kumbaya_xyz/router-sdk) | Router SDK for swap encoding |
+| [@kumbaya_xyz/universal-router-sdk](https://www.npmjs.com/package/@kumbaya_xyz/universal-router-sdk) | Universal Router SDK |
+| [@kumbaya_xyz/smart-order-router](https://www.npmjs.com/package/@kumbaya_xyz/smart-order-router) | Smart Order Router for optimal swap routing |
+| [@kumbaya_xyz/v2-sdk](https://www.npmjs.com/package/@kumbaya_xyz/v2-sdk) | V2 pool SDK |
+| [@kumbaya_xyz/permit2-sdk](https://www.npmjs.com/package/@kumbaya_xyz/permit2-sdk) | Permit2 signature SDK |
+
+### Installation
+
+```bash
+npm install @kumbaya_xyz/sdk-core @kumbaya_xyz/v3-sdk @kumbaya_xyz/smart-order-router
+```
+
+### Aliasing in package.json
+
+To use Kumbaya packages as drop-in replacements for Uniswap packages:
+
+```json
+{
+  "dependencies": {
+    "@uniswap/sdk-core": "npm:@kumbaya_xyz/sdk-core@^7.11.0",
+    "@uniswap/v3-sdk": "npm:@kumbaya_xyz/v3-sdk@^3.14.0",
+    "@uniswap/router-sdk": "npm:@kumbaya_xyz/router-sdk@^1.15.0",
+    "@uniswap/universal-router-sdk": "npm:@kumbaya_xyz/universal-router-sdk@^4.25.0"
+  }
+}
