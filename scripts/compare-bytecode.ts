@@ -19,7 +19,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 // RPC endpoints
 const RPC_ENDPOINTS: Record<string, string> = {
   testnet: 'https://timothy.megaeth.com/rpc',
-  mainnet: '', // TBA
+  mainnet: 'https://mainnet.megaeth.com/rpc',
   ethereum: 'https://eth.llamarpc.com',
 }
 
@@ -113,8 +113,8 @@ const CONTRACTS_WITH_EXPECTED_DIFFERENCES: Record<string, string> = {
 
 // Load addresses from JSON file
 function loadAddresses(network: 'testnet' | 'mainnet'): { rpc: string; contracts: Record<string, string>; poolInitCodeHash: string } {
-  const filename = network === 'testnet' ? 'addresses.json' : 'mainnetAddresses.json'
-  const filepath = join(__dirname, '..', filename)
+  const filename = network === 'testnet' ? 'megaETH-testnet.json' : 'megaETH-mainnet.json'
+  const filepath = join(__dirname, '..', 'addresses', filename)
   const data = JSON.parse(readFileSync(filepath, 'utf-8'))
 
   return {

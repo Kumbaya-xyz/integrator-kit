@@ -12,24 +12,52 @@ import "./interfaces/IERC20.sol";
 
 /**
  * @title MegaETH On-Chain Integration Tests
- * @notice Tests for Kumbaya DEX contracts deployed on MegaETH Testnet
- * @dev Run with: forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+ * @notice Tests for Kumbaya DEX contracts deployed on MegaETH (mainnet & testnet)
+ * @dev Run with:
+ *   Testnet: forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+ *   Mainnet: FACTORY=0x68b... forge test --rpc-url https://mainnet.megaeth.com/rpc -vvv
+ *
+ * Contract addresses are detected based on chain ID:
+ *   - Chain ID 4326 (mainnet): Uses mainnet addresses
+ *   - Chain ID 6343 (testnet): Uses testnet addresses
  */
 contract MegaETHOnChainTest is Test {
-    // MegaETH Testnet Contract Addresses (from integrator-kit/addresses.json)
-    address constant FACTORY = 0x53447989580f541bc138d29A0FcCf72AfbBE1355;
-    address constant NFT_POSITION_MANAGER = 0x367f9db1F974eA241ba046b77B87C58e2947d8dF;
-    address constant SWAP_ROUTER_02 = 0x8268DC930BA98759E916DEd4c9F367A844814023;
-    address constant QUOTER_V2 = 0xfb230b93803F90238cB03f254452bA3a3b0Ec38d;
+    // Chain IDs
+    uint256 constant MEGAETH_MAINNET = 4326;
+    uint256 constant MEGAETH_TESTNET = 6343;
+
+    // MegaETH Mainnet Contract Addresses
+    address constant MAINNET_FACTORY = 0x68b34591f662508076927803c567Cc8006988a09;
+    address constant MAINNET_NFT_POSITION_MANAGER = 0x2b781C57e6358f64864Ff8EC464a03Fdaf9974bA;
+    address constant MAINNET_SWAP_ROUTER_02 = 0xE5BbEF8De2DB447a7432A47EBa58924d94eE470e;
+    address constant MAINNET_QUOTER_V2 = 0x1F1a8dC7E138C34b503Ca080962aC10B75384a27;
+    address constant MAINNET_MULTICALL2 = 0xf6f404ac6289ab8eB1caf244008b5F073d59385c;
+
+    // MegaETH Testnet Contract Addresses
+    address constant TESTNET_FACTORY = 0x53447989580f541bc138d29A0FcCf72AfbBE1355;
+    address constant TESTNET_NFT_POSITION_MANAGER = 0x367f9db1F974eA241ba046b77B87C58e2947d8dF;
+    address constant TESTNET_SWAP_ROUTER_02 = 0x8268DC930BA98759E916DEd4c9F367A844814023;
+    address constant TESTNET_QUOTER_V2 = 0xfb230b93803F90238cB03f254452bA3a3b0Ec38d;
+    address constant TESTNET_MULTICALL2 = 0xc638099246A98B3A110429B47B3F42CA037BC0a3;
+
+    // Shared addresses (same on both networks)
     address constant WETH9 = 0x4200000000000000000000000000000000000006;
-    address constant MULTICALL2 = 0xc638099246A98B3A110429B47B3F42CA037BC0a3;
 
-    // Test tokens on MegaETH Testnet
-    address constant USDC = 0x75139A9559c9CD1aD69B7E239C216151D2c81e6f;
-    address constant USDT = 0x8E1eb0b74A0aC37abaa0f75C598A681975896900;
+    // Test tokens (testnet only - mainnet tokens TBD)
+    address constant TESTNET_USDC = 0x75139A9559c9CD1aD69B7E239C216151D2c81e6f;
+    address constant TESTNET_USDT = 0x8E1eb0b74A0aC37abaa0f75C598A681975896900;
 
-    // Expected pool init code hash
+    // Expected pool init code hash (same for both networks)
     bytes32 constant POOL_INIT_CODE_HASH = 0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7;
+
+    // Dynamic addresses set in setUp based on chain ID
+    address FACTORY;
+    address NFT_POSITION_MANAGER;
+    address SWAP_ROUTER_02;
+    address QUOTER_V2;
+    address MULTICALL2;
+    address USDC;
+    address USDT;
 
     // Contract interfaces
     IUniswapV3Factory factory;
@@ -39,6 +67,31 @@ contract MegaETHOnChainTest is Test {
     IWETH9 weth;
 
     function setUp() public {
+        uint256 chainId = block.chainid;
+
+        if (chainId == MEGAETH_MAINNET) {
+            emit log("Running on MegaETH Mainnet (Chain ID: 4326)");
+            FACTORY = MAINNET_FACTORY;
+            NFT_POSITION_MANAGER = MAINNET_NFT_POSITION_MANAGER;
+            SWAP_ROUTER_02 = MAINNET_SWAP_ROUTER_02;
+            QUOTER_V2 = MAINNET_QUOTER_V2;
+            MULTICALL2 = MAINNET_MULTICALL2;
+            // Mainnet tokens - update these when tokens are deployed
+            USDC = address(0);
+            USDT = address(0);
+        } else if (chainId == MEGAETH_TESTNET) {
+            emit log("Running on MegaETH Testnet (Chain ID: 6343)");
+            FACTORY = TESTNET_FACTORY;
+            NFT_POSITION_MANAGER = TESTNET_NFT_POSITION_MANAGER;
+            SWAP_ROUTER_02 = TESTNET_SWAP_ROUTER_02;
+            QUOTER_V2 = TESTNET_QUOTER_V2;
+            MULTICALL2 = TESTNET_MULTICALL2;
+            USDC = TESTNET_USDC;
+            USDT = TESTNET_USDT;
+        } else {
+            revert(string(abi.encodePacked("Unsupported chain ID: ", vm.toString(chainId))));
+        }
+
         factory = IUniswapV3Factory(FACTORY);
         nftManager = INonfungiblePositionManager(NFT_POSITION_MANAGER);
         swapRouter = ISwapRouter02(SWAP_ROUTER_02);
@@ -50,8 +103,9 @@ contract MegaETHOnChainTest is Test {
 
     function test_FactoryIsDeployed() public view {
         uint256 codeSize;
+        address factoryAddr = FACTORY;
         assembly {
-            codeSize := extcodesize(0x53447989580f541bc138d29A0FcCf72AfbBE1355)
+            codeSize := extcodesize(factoryAddr)
         }
         assertGt(codeSize, 0, "Factory has no code");
     }
@@ -112,7 +166,7 @@ contract MegaETHOnChainTest is Test {
         address tokenA,
         address tokenB,
         uint24 fee
-    ) internal pure returns (address pool) {
+    ) internal view returns (address pool) {
         // Sort tokens
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
 
@@ -134,6 +188,11 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_PoolInitCodeHash_WETH_USDC_3000() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         // Get the actual pool address from factory
         address actualPool = factory.getPool(WETH9, USDC, 3000);
 
@@ -157,6 +216,11 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_PoolInitCodeHash_WETH_USDC_500() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         address actualPool = factory.getPool(WETH9, USDC, 500);
 
         if (actualPool == address(0)) {
@@ -173,6 +237,11 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_PoolInitCodeHash_USDC_USDT_100() public {
+        if (USDC == address(0) || USDT == address(0)) {
+            emit log("USDC/USDT not configured for this network - skipping test");
+            return;
+        }
+
         address actualPool = factory.getPool(USDC, USDT, 100);
 
         if (actualPool == address(0)) {
@@ -189,6 +258,11 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_PoolInitCodeHash_AllExistingPools() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         // Test all fee tiers for WETH/USDC
         uint24[4] memory feeTiers = [uint24(100), uint24(500), uint24(3000), uint24(10000)];
 
@@ -213,6 +287,11 @@ contract MegaETHOnChainTest is Test {
 
     /// @notice Test that creating a new pool returns an address matching CREATE2 computation
     function test_NewPoolMatchesCREATE2() public {
+        if (USDT == address(0)) {
+            emit log("USDT not configured for this network - skipping test");
+            return;
+        }
+
         // Use a unique fee tier to ensure we're creating a new pool
         // Try WETH/USDT with 10000 fee (1%)
         address existingPool = factory.getPool(WETH9, USDT, 10000);
@@ -250,6 +329,11 @@ contract MegaETHOnChainTest is Test {
 
     /// @notice Verify QuoterV2 can find and quote pools (uses internal pool address computation)
     function test_QuoterV2_PoolAddressComputation() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         // First verify the pool exists via factory
         address factoryPool = factory.getPool(WETH9, USDC, 3000);
 
@@ -290,8 +374,13 @@ contract MegaETHOnChainTest is Test {
             assertGt(amountOut, 0, "QuoterV2 should return non-zero quote");
             emit log("SUCCESS: QuoterV2 pool init code hash is correct");
         } catch Error(string memory reason) {
-            emit log_named_string("QuoterV2 failed with reason", reason);
-            fail("QuoterV2 should find pool - init code hash may be incorrect");
+            // "SPL" = sqrtPriceLimitX96 error, means pool was found but has no liquidity - this is OK
+            if (keccak256(bytes(reason)) == keccak256(bytes("SPL"))) {
+                emit log("QuoterV2 found pool but no liquidity (SPL error) - init code hash is correct");
+            } else {
+                emit log_named_string("QuoterV2 failed with reason", reason);
+                fail("QuoterV2 should find pool - init code hash may be incorrect");
+            }
         } catch {
             emit log("QuoterV2 failed - likely no liquidity in pool");
         }
@@ -305,6 +394,13 @@ contract MegaETHOnChainTest is Test {
         // Check that factory reference is correct
         address nftFactory = nftManager.factory();
         assertEq(nftFactory, FACTORY, "NFT Manager factory reference should match");
+
+        if (USDC == address(0)) {
+            emit log("USDC not configured - skipping pool creation test");
+            emit log_named_address("NFT Manager references factory", nftFactory);
+            emit log("SUCCESS: NFT Position Manager should work with pools from this factory");
+            return;
+        }
 
         // Verify a pool created via factory is findable
         address factoryPool = factory.getPool(WETH9, USDC, 3000);
@@ -336,8 +432,17 @@ contract MegaETHOnChainTest is Test {
 
     /// @notice End-to-end test: verify computed address == factory address == what periphery uses
     function test_FullStack_PoolAddressConsistency() public {
-        // This is the definitive test - all components should agree on pool addresses
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - running partial test");
+            // Still verify periphery contracts reference correct factory
+            assertEq(quoter.factory(), FACTORY, "Quoter factory mismatch");
+            assertEq(swapRouter.factory(), FACTORY, "SwapRouter factory mismatch");
+            assertEq(nftManager.factory(), FACTORY, "NFT Manager factory mismatch");
+            emit log("SUCCESS: All periphery contracts reference correct factory");
+            return;
+        }
 
+        // This is the definitive test - all components should agree on pool addresses
         address factoryPool = factory.getPool(WETH9, USDC, 3000);
 
         if (factoryPool == address(0)) {
@@ -391,6 +496,11 @@ contract MegaETHOnChainTest is Test {
     );
 
     function test_CanCreatePool() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         // Check if WETH/USDC pool exists for 0.3% fee
         address pool = factory.getPool(WETH9, USDC, 3000);
 
@@ -406,6 +516,10 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_ExistingPoolConfiguration() public view {
+        if (USDC == address(0)) {
+            return;
+        }
+
         // Check WETH/USDC pool
         address pool = factory.getPool(WETH9, USDC, 3000);
 
@@ -465,6 +579,11 @@ contract MegaETHOnChainTest is Test {
     }
 
     function test_QuoteSwap() public {
+        if (USDC == address(0)) {
+            emit log("USDC not configured for this network - skipping test");
+            return;
+        }
+
         address pool = factory.getPool(WETH9, USDC, 3000);
         if (pool == address(0)) {
             emit log("Skipping quote test - no WETH/USDC pool");
@@ -473,7 +592,7 @@ contract MegaETHOnChainTest is Test {
 
         // Check if pool is initialized
         IUniswapV3Pool poolContract = IUniswapV3Pool(pool);
-        (uint160 sqrtPriceX96,,,,,, bool unlocked) = poolContract.slot0();
+        (uint160 sqrtPriceX96,,,,,,) = poolContract.slot0();
 
         if (sqrtPriceX96 == 0) {
             emit log("Skipping quote test - pool not initialized");

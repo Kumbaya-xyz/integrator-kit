@@ -6,7 +6,28 @@ Integration resources for building on Kumbaya DEX - contract addresses, ABIs, an
 
 ## Networks
 
-### MegaETH Testnet (v2)
+### MegaETH Mainnet
+
+- Chain ID: `4326`
+- RPC: `https://mainnet.megaeth.com/rpc`
+- Explorer: https://megaeth.blockscout.com/
+- Pool init code hash: `0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7`
+
+**Key Contracts**
+
+| Contract                   | Address                                      |
+| -------------------------- | -------------------------------------------- |
+| UniswapV3Factory           | `0x68b34591f662508076927803c567Cc8006988a09` |
+| NonfungiblePositionManager | `0x2b781C57e6358f64864Ff8EC464a03Fdaf9974bA` |
+| SwapRouter02               | `0xE5BbEF8De2DB447a7432A47EBa58924d94eE470e` |
+| UniversalRouter            | `0xAAB1C664CeaD881AfBB58555e6A3a79523D3e4C0` |
+| QuoterV2                   | `0x1F1a8dC7E138C34b503Ca080962aC10B75384a27` |
+| Permit2                    | `0x000000000022D473030F116dDEE9F6B43aC78BA3` |
+| WETH9                      | `0x4200000000000000000000000000000000000006` |
+
+See `addresses/megaETH-mainnet.json` for all contracts.
+
+### MegaETH Testnet
 
 - Chain ID: `6343` (`0x18c7`)
 - RPC: `https://timothy.megaeth.com/rpc`
@@ -25,7 +46,21 @@ Integration resources for building on Kumbaya DEX - contract addresses, ABIs, an
 | Permit2                    | `0x000000000022D473030F116dDEE9F6B43aC78BA3` |
 | WETH9                      | `0x4200000000000000000000000000000000000006` |
 
-See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator, V3Staker, descriptors, ProxyAdmin).
+See `addresses/megaETH-testnet.json` for all contracts.
+
+## Directory Structure
+
+```
+integrator-kit/
+├── addresses/           # Contract addresses by network
+│   ├── megaETH-mainnet.json
+│   └── megaETH-testnet.json
+├── abis/                # Contract ABIs
+├── scripts/             # Utility scripts
+└── tests/               # Integration tests
+    └── megaETH/         # Foundry tests for MegaETH (mainnet & testnet)
+        └── ethereum-mainnet.json  # Uniswap reference for bytecode comparison
+```
 
 ## ABIs Provided (source)
 
@@ -39,7 +74,7 @@ See `addresses.json` for supporting contracts (Multicall2, TickLens, V3Migrator,
 
 ## Provenance
 
-ABIs are extracted from Kumbaya contract build artifacts and verified against deployed bytecode on MegaETH testnet.
+ABIs are extracted from Kumbaya contract build artifacts and verified against deployed bytecode on MegaETH.
 
 ## Regenerating ABIs
 
@@ -72,7 +107,7 @@ npm install @ethersproject/providers tsx
 # Compare testnet deployment
 npx tsx scripts/compare-bytecode.ts testnet
 
-# Compare mainnet deployment (when available)
+# Compare mainnet deployment
 npx tsx scripts/compare-bytecode.ts mainnet
 ```
 
@@ -81,30 +116,6 @@ The script:
 - Masks out constructor arguments / immutables
 - Compares the remaining logic bytecode
 - Verifies the correct `POOL_INIT_CODE_HASH` is embedded in each contract
-
-## MegaETH Mainnet Deployment
-
-- Chain ID: `4326`
-- RPC / Explorer: _(not provided)_
-
-### Key Contracts (from `mainnetAddresses.json`)
-
-| Contract                                      | Address                                      |
-| --------------------------------------------- | -------------------------------------------- |
-| `UniswapV3Factory`                            | `TBA` |
-| `NonfungiblePositionManager`                  | `TBA` |
-| `SwapRouter02`                                | `TBA` |
-| `UniversalRouter`                             | `TBA` |
-| `QuoterV2`                                    | `TBA` |
-| `UnsupportedProtocol`                         | `TBA` |
-| `Multicall2`                                  | `TBA` |
-| `ProxyAdmin`                                  | `TBA` |
-| `TickLens`                                    | `TBA` |
-| `NFTDescriptor (v1.3.0)`                      | `TBA` |
-| `NonfungibleTokenPositionDescriptor (v1.3.0)` | `TBA` |
-| `DescriptorProxy`                             | `TBA` |
-| `V3Migrator`                                  | `TBA` |
-| `UniswapV3Staker`                             | `TBA` |
 
 ## NPM Packages
 
@@ -143,7 +154,7 @@ To use Kumbaya packages as drop-in replacements for Uniswap packages:
 
 ## On-Chain Integration Tests
 
-The `testnet-tests/` directory contains Foundry-based integration tests that run against the deployed contracts on MegaETH Testnet. These tests verify:
+The `tests/megaETH/` directory contains Foundry-based integration tests that run against the deployed contracts on MegaETH. These tests verify:
 
 - **Contract Deployment**: All core contracts are deployed and accessible
 - **CREATE2 Pool Addresses**: The pool init code hash correctly computes pool addresses matching what the factory creates
@@ -158,13 +169,16 @@ The `testnet-tests/` directory contains Foundry-based integration tests that run
 ### Running the Tests
 
 ```bash
-cd testnet-tests
+cd tests/megaETH
 
 # Install dependencies
 forge install
 
-# Run all tests against MegaETH Testnet
+# Run tests against MegaETH Testnet
 forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+
+# Run tests against MegaETH Mainnet
+forge test --rpc-url https://mainnet.megaeth.com/rpc -vvv
 ```
 
 ### Test Coverage
@@ -188,4 +202,4 @@ The tests use the Kumbaya pool init code hash to compute pool addresses via CREA
 bytes32 constant POOL_INIT_CODE_HASH = 0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7;
 ```
 
-If you're integrating with Kumbaya DEX, ensure your SDK/code uses this hash instead of the default Uniswap hash
+If you're integrating with Kumbaya DEX, ensure your SDK/code uses this hash instead of the default Uniswap hash.

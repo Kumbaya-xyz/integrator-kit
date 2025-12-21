@@ -1,0 +1,25 @@
+{
+  "chainId": 4326,
+  "chainName": "MegaETH",
+  "rpc": "https://mainnet.megaeth.com/rpc",
+  "blockExplorer": "https://megaeth.blockscout.com/",
+  "contracts": {
+    "WETH9": "0x4200000000000000000000000000000000000006",
+    "UniswapV3Factory": "0x68b34591f662508076927803c567Cc8006988a09",
+    "NonfungiblePositionManager": "0x2b781C57e6358f64864Ff8EC464a03Fdaf9974bA",
+    "SwapRouter02": "0xE5BbEF8De2DB447a7432A47EBa58924d94eE470e",
+    "UniversalRouter": "0xAAB1C664CeaD881AfBB58555e6A3a79523D3e4C0",
+    "UnsupportedProtocol": "0xfE62b6d18e046d95BE9Bd667f573eBc5BF1DbAa0",
+    "QuoterV2": "0x1F1a8dC7E138C34b503Ca080962aC10B75384a27",
+    "Permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+    "Multicall2": "0xf6f404ac6289ab8eB1caf244008b5F073d59385c",
+    "TickLens": "0x9c22f028e0a1dc76EB895a1929DBc517c9D0593e",
+    "V3Migrator": "0xE2702742F78b84F2032C5A36082b199E2d62aAB0",
+    "UniswapV3Staker": "0x9F393A399321110Fb7D85aCc812b8e48A7c569aC",
+    "ProxyAdmin": "0x366c29077423CF99f7bbE4508Cf508778EAB25fb",
+    "NonfungibleTokenPositionDescriptor": "0x99532f595D286397367E49BC0906232Aa23E13E8",
+    "DescriptorProxy": "0x545e7e003f795Fa0Daa2E4F38aF16c91a524C892",
+    "NonfungibleTokenDescriptorLibrary": "0x9BDa62581c9E983184A74C5D438b5BAC667B3D34"
+  },
+  "poolInitCodeHash": "0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7"
+}
