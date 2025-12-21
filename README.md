@@ -144,10 +144,10 @@ To use Kumbaya packages as drop-in replacements for Uniswap packages:
 ```json
 {
   "dependencies": {
-    "@uniswap/sdk-core": "npm:@kumbaya_xyz/sdk-core@^7.12.0",
-    "@uniswap/v3-sdk": "npm:@kumbaya_xyz/v3-sdk@^3.15.0",
-    "@uniswap/router-sdk": "npm:@kumbaya_xyz/router-sdk@^1.17.0",
-    "@uniswap/universal-router-sdk": "npm:@kumbaya_xyz/universal-router-sdk@^4.26.0"
+    "@uniswap/sdk-core": "npm:@kumbaya_xyz/sdk-core@^7.12.1",
+    "@uniswap/v3-sdk": "npm:@kumbaya_xyz/v3-sdk@^3.15.1",
+    "@uniswap/router-sdk": "npm:@kumbaya_xyz/router-sdk@^1.17.1",
+    "@uniswap/universal-router-sdk": "npm:@kumbaya_xyz/universal-router-sdk@^4.26.1"
   }
 }
 ```
