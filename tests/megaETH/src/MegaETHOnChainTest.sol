@@ -9,6 +9,7 @@ import "./interfaces/ISwapRouter02.sol";
 import "./interfaces/IQuoterV2.sol";
 import "./interfaces/IWETH9.sol";
 import "./interfaces/IERC20.sol";
+import "./interfaces/IMulticall.sol";
 
 /**
  * @title MegaETH On-Chain Integration Tests
@@ -32,6 +33,7 @@ contract MegaETHOnChainTest is Test {
     address constant MAINNET_SWAP_ROUTER_02 = 0xE5BbEF8De2DB447a7432A47EBa58924d94eE470e;
     address constant MAINNET_QUOTER_V2 = 0x1F1a8dC7E138C34b503Ca080962aC10B75384a27;
     address constant MAINNET_MULTICALL2 = 0xf6f404ac6289ab8eB1caf244008b5F073d59385c;
+    address constant MAINNET_MULTICALL = 0xeeb4a1001354717598Af33f3585B66F9de7e7b27;
 
     // MegaETH Testnet Contract Addresses
     address constant TESTNET_FACTORY = 0x53447989580f541bc138d29A0FcCf72AfbBE1355;
@@ -39,6 +41,7 @@ contract MegaETHOnChainTest is Test {
     address constant TESTNET_SWAP_ROUTER_02 = 0x8268DC930BA98759E916DEd4c9F367A844814023;
     address constant TESTNET_QUOTER_V2 = 0xfb230b93803F90238cB03f254452bA3a3b0Ec38d;
     address constant TESTNET_MULTICALL2 = 0xc638099246A98B3A110429B47B3F42CA037BC0a3;
+    address constant TESTNET_MULTICALL = 0x0DC8eE7a1BcF659dC41B25669238688A816A051A;
 
     // Shared addresses (same on both networks)
     address constant WETH9 = 0x4200000000000000000000000000000000000006;
@@ -56,6 +59,7 @@ contract MegaETHOnChainTest is Test {
     address SWAP_ROUTER_02;
     address QUOTER_V2;
     address MULTICALL2;
+    address MULTICALL;
     address USDC;
     address USDT;
 
@@ -65,6 +69,7 @@ contract MegaETHOnChainTest is Test {
     ISwapRouter02 swapRouter;
     IQuoterV2 quoter;
     IWETH9 weth;
+    IMulticall multicall;
 
     function setUp() public {
         uint256 chainId = block.chainid;
@@ -76,6 +81,7 @@ contract MegaETHOnChainTest is Test {
             SWAP_ROUTER_02 = MAINNET_SWAP_ROUTER_02;
             QUOTER_V2 = MAINNET_QUOTER_V2;
             MULTICALL2 = MAINNET_MULTICALL2;
+            MULTICALL = MAINNET_MULTICALL;
             // Mainnet tokens - update these when tokens are deployed
             USDC = address(0);
             USDT = address(0);
@@ -86,6 +92,7 @@ contract MegaETHOnChainTest is Test {
             SWAP_ROUTER_02 = TESTNET_SWAP_ROUTER_02;
             QUOTER_V2 = TESTNET_QUOTER_V2;
             MULTICALL2 = TESTNET_MULTICALL2;
+            MULTICALL = TESTNET_MULTICALL;
             USDC = TESTNET_USDC;
             USDT = TESTNET_USDT;
         } else {
@@ -97,6 +104,7 @@ contract MegaETHOnChainTest is Test {
         swapRouter = ISwapRouter02(SWAP_ROUTER_02);
         quoter = IQuoterV2(QUOTER_V2);
         weth = IWETH9(WETH9);
+        multicall = IMulticall(MULTICALL);
     }
 
     // ==================== READ-ONLY VALIDATION TESTS ====================
@@ -138,14 +146,115 @@ contract MegaETHOnChainTest is Test {
         assertEq(weth.decimals(), 18, "WETH should have 18 decimals");
     }
 
+    // ==================== MULTICALL TESTS ====================
+
+    function test_MulticallIsDeployed() public view {
+        uint256 codeSize;
+        address multicallAddr = MULTICALL;
+        assembly {
+            codeSize := extcodesize(multicallAddr)
+        }
+        assertGt(codeSize, 0, "Multicall has no code");
+    }
+
+    function test_MulticallGetCurrentBlockTimestamp() public view {
+        uint256 timestamp = multicall.getCurrentBlockTimestamp();
+        assertGt(timestamp, 0, "Timestamp should be non-zero");
+        assertEq(timestamp, block.timestamp, "Timestamp should match block.timestamp");
+    }
+
+    function test_MulticallGetEthBalance() public {
+        uint256 balance = multicall.getEthBalance(WETH9);
+        emit log_named_uint("WETH9 contract ETH balance", balance);
+        // Just verify it returns without reverting - balance could be 0 or non-zero
+    }
+
+    function test_MulticallBatchCalls() public {
+        // Test multicall with multiple calls to get token info
+        IMulticall.Call[] memory calls = new IMulticall.Call[](3);
+
+        // Call 1: Get WETH symbol
+        calls[0] = IMulticall.Call({
+            target: WETH9,
+            gasLimit: 100000,
+            callData: abi.encodeWithSignature("symbol()")
+        });
+
+        // Call 2: Get WETH decimals
+        calls[1] = IMulticall.Call({
+            target: WETH9,
+            gasLimit: 100000,
+            callData: abi.encodeWithSignature("decimals()")
+        });
+
+        // Call 3: Get WETH name
+        calls[2] = IMulticall.Call({
+            target: WETH9,
+            gasLimit: 100000,
+            callData: abi.encodeWithSignature("name()")
+        });
+
+        (uint256 blockNumber, IMulticall.Result[] memory results) = multicall.multicall(calls);
+
+        assertGt(blockNumber, 0, "Block number should be non-zero");
+        assertEq(results.length, 3, "Should have 3 results");
+
+        // Verify all calls succeeded
+        for (uint i = 0; i < results.length; i++) {
+            assertTrue(results[i].success, string(abi.encodePacked("Call ", vm.toString(i), " should succeed")));
+            assertGt(results[i].returnData.length, 0, "Return data should not be empty");
+        }
+
+        // Decode and verify results
+        string memory symbol = abi.decode(results[0].returnData, (string));
+        uint8 decimals = abi.decode(results[1].returnData, (uint8));
+        string memory name = abi.decode(results[2].returnData, (string));
+
+        assertEq(symbol, "WETH", "Symbol should be WETH");
+        assertEq(decimals, 18, "Decimals should be 18");
+        emit log_named_string("WETH name", name);
+    }
+
+    function test_MulticallWithFactoryCalls() public {
+        // Test multicall with factory fee tier queries
+        IMulticall.Call[] memory calls = new IMulticall.Call[](4);
+
+        uint24[4] memory feeTiers = [uint24(100), uint24(500), uint24(3000), uint24(10000)];
+
+        for (uint i = 0; i < 4; i++) {
+            calls[i] = IMulticall.Call({
+                target: FACTORY,
+                gasLimit: 100000,
+                callData: abi.encodeWithSignature("feeAmountTickSpacing(uint24)", feeTiers[i])
+            });
+        }
+
+        (uint256 blockNumber, IMulticall.Result[] memory results) = multicall.multicall(calls);
+
+        assertGt(blockNumber, 0, "Block number should be non-zero");
+        assertEq(results.length, 4, "Should have 4 results");
+
+        // Expected tick spacings
+        int24[4] memory expectedTickSpacings = [int24(1), int24(10), int24(60), int24(200)];
+
+        for (uint i = 0; i < 4; i++) {
+            assertTrue(results[i].success, "Fee tier query should succeed");
+            int24 tickSpacing = abi.decode(results[i].returnData, (int24));
+            assertEq(tickSpacing, expectedTickSpacings[i], "Tick spacing mismatch");
+        }
+
+        emit log("SUCCESS: Multicall batch factory queries work correctly");
+    }
+
     function test_AllContractsDeployed() public view {
-        address[6] memory contracts = [
+        address[7] memory contracts = [
             FACTORY,
             NFT_POSITION_MANAGER,
             SWAP_ROUTER_02,
             QUOTER_V2,
             WETH9,
-            MULTICALL2
+            MULTICALL2,
+            MULTICALL
         ];
 
         for (uint i = 0; i < contracts.length; i++) {
