@@ -19,7 +19,8 @@
     "ProxyAdmin": "0xC8ba18a27CBEF52B14Bfe24f964D5174e658892C",
     "NonfungibleTokenPositionDescriptor": "0x36D1Cce00D4e6a8Cb101f7E4edc53E5a05854eBC",
     "DescriptorProxy": "0x4B10AE67659f5888082305294E627582407819d2",
-    "NonfungibleTokenDescriptorLibrary": "0xbd19A388937Ea4B9c66B3eD6fB81B27EB4a22375"
+    "NonfungibleTokenDescriptorLibrary": "0xbd19A388937Ea4B9c66B3eD6fB81B27EB4a22375",
+    "Multicall": "0x0DC8eE7a1BcF659dC41B25669238688A816A051A"
   },
   "poolInitCodeHash": "0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7"
 }

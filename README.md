@@ -65,7 +65,7 @@ integrator-kit/
 ## ABIs Provided (source)
 
 - Core: `UniswapV3Factory.json`, `UniswapV3Pool.json` (`@kumbaya_xyz/v3-core`)
-- Periphery: `NonfungiblePositionManager.json`, `V3Migrator.json`, `TickLens.json`, `Multicall2.json` (`@kumbaya_xyz/v3-periphery`)
+- Periphery: `NonfungiblePositionManager.json`, `V3Migrator.json`, `TickLens.json`, `Multicall2.json`, `Multicall.json` (`@kumbaya_xyz/v3-periphery`)
 - Swap Router: `QuoterV2.json`, `SwapRouter02.json` (`@kumbaya_xyz/swap-router-contracts`)
 - Incentives: `UniswapV3Staker.json` (`@kumbaya_xyz/v3-staker`)
 - Routing: `UniversalRouter.json` (`@kumbaya_xyz/universal-router`)
