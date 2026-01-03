@@ -18,7 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // RPC endpoints
 const RPC_ENDPOINTS: Record<string, string> = {
-  testnet: 'https://timothy.megaeth.com/rpc',
+  testnet: 'https://carrot.megaeth.com/rpc',
   mainnet: 'https://mainnet.megaeth.com/rpc',
   ethereum: 'https://eth.llamarpc.com',
 }

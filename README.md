@@ -30,7 +30,7 @@ See `addresses/megaETH-mainnet.json` for all contracts.
 ### MegaETH Testnet
 
 - Chain ID: `6343` (`0x18c7`)
-- RPC: `https://timothy.megaeth.com/rpc`
+- RPC: `https://carrot.megaeth.com/rpc`
 - Explorer: https://megaeth-testnet-v2.blockscout.com/
 - Pool init code hash: `0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7`
 
@@ -175,7 +175,7 @@ cd tests/megaETH
 forge install
 
 # Run tests against MegaETH Testnet
-forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+forge test --rpc-url https://carrot.megaeth.com/rpc -vvv
 
 # Run tests against MegaETH Mainnet
 forge test --rpc-url https://mainnet.megaeth.com/rpc -vvv

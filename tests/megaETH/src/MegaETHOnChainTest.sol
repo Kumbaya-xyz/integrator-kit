@@ -15,7 +15,7 @@ import "./interfaces/IMulticall.sol";
  * @title MegaETH On-Chain Integration Tests
  * @notice Tests for Kumbaya DEX contracts deployed on MegaETH (mainnet & testnet)
  * @dev Run with:
- *   Testnet: forge test --rpc-url https://timothy.megaeth.com/rpc -vvv
+ *   Testnet: forge test --rpc-url https://carrot.megaeth.com/rpc -vvv
  *   Mainnet: FACTORY=0x68b... forge test --rpc-url https://mainnet.megaeth.com/rpc -vvv
  *
  * Contract addresses are detected based on chain ID:
