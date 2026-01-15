@@ -119,37 +119,38 @@ The script:
 
 ## NPM Packages
 
-Kumbaya publishes forked Uniswap SDKs with MegaETH support:
+Kumbaya publishes SDKs and contract packages for MegaETH integration:
+
+### SDKs
 
 | Package | Description |
 |---------|-------------|
-| [@kumbaya_xyz/sdk-core](https://www.npmjs.com/package/@kumbaya_xyz/sdk-core) | Core SDK with chain definitions and token types |
-| [@kumbaya_xyz/v3-sdk](https://www.npmjs.com/package/@kumbaya_xyz/v3-sdk) | V3 pool SDK with pool init code hash |
+| [@kumbaya_xyz/sdk-core](https://www.npmjs.com/package/@kumbaya_xyz/sdk-core) | Core SDK with MegaETH chain definitions and token types |
+| [@kumbaya_xyz/v3-sdk](https://www.npmjs.com/package/@kumbaya_xyz/v3-sdk) | V3 pool SDK with Kumbaya pool init code hash |
 | [@kumbaya_xyz/router-sdk](https://www.npmjs.com/package/@kumbaya_xyz/router-sdk) | Router SDK for swap encoding |
 | [@kumbaya_xyz/universal-router-sdk](https://www.npmjs.com/package/@kumbaya_xyz/universal-router-sdk) | Universal Router SDK |
 | [@kumbaya_xyz/smart-order-router](https://www.npmjs.com/package/@kumbaya_xyz/smart-order-router) | Smart Order Router for optimal swap routing |
-| [@kumbaya_xyz/v2-sdk](https://www.npmjs.com/package/@kumbaya_xyz/v2-sdk) | V2 pool SDK |
-| [@kumbaya_xyz/permit2-sdk](https://www.npmjs.com/package/@kumbaya_xyz/permit2-sdk) | Permit2 signature SDK |
 
-### Installation
+### Contracts
+
+| Package | Description |
+|---------|-------------|
+| [@kumbaya_xyz/v3-core](https://www.npmjs.com/package/@kumbaya_xyz/v3-core) | V3 core contracts (Factory, Pool) |
+| [@kumbaya_xyz/v3-periphery](https://www.npmjs.com/package/@kumbaya_xyz/v3-periphery) | V3 periphery contracts (NFTPositionManager, etc.) |
+| [@kumbaya_xyz/v3-staker](https://www.npmjs.com/package/@kumbaya_xyz/v3-staker) | V3 liquidity mining staker |
+| [@kumbaya_xyz/swap-router-contracts](https://www.npmjs.com/package/@kumbaya_xyz/swap-router-contracts) | SwapRouter02 and QuoterV2 contracts |
+| [@kumbaya_xyz/universal-router](https://www.npmjs.com/package/@kumbaya_xyz/universal-router) | Universal Router contract |
+
+### Other
+
+| Package | Description |
+|---------|-------------|
+| [@kumbaya_xyz/default-token-list](https://www.npmjs.com/package/@kumbaya_xyz/default-token-list) | Curated token list for MegaETH |
+
+### Installation Example
 
 ```bash
 npm install @kumbaya_xyz/sdk-core @kumbaya_xyz/v3-sdk @kumbaya_xyz/smart-order-router
-```
-
-### Aliasing in package.json
-
-To use Kumbaya packages as drop-in replacements for Uniswap packages:
-
-```json
-{
-  "dependencies": {
-    "@uniswap/sdk-core": "npm:@kumbaya_xyz/sdk-core@^7.12.1",
-    "@uniswap/v3-sdk": "npm:@kumbaya_xyz/v3-sdk@^3.15.1",
-    "@uniswap/router-sdk": "npm:@kumbaya_xyz/router-sdk@^1.17.1",
-    "@uniswap/universal-router-sdk": "npm:@kumbaya_xyz/universal-router-sdk@^4.26.1"
-  }
-}
 ```
 
 ## On-Chain Integration Tests
