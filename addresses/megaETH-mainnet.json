@@ -17,9 +17,9 @@
     "V3Migrator": "0xE2702742F78b84F2032C5A36082b199E2d62aAB0",
     "UniswapV3Staker": "0x9F393A399321110Fb7D85aCc812b8e48A7c569aC",
     "ProxyAdmin": "0x366c29077423CF99f7bbE4508Cf508778EAB25fb",
-    "NonfungibleTokenPositionDescriptor": "0x99532f595D286397367E49BC0906232Aa23E13E8",
+    "NonfungibleTokenPositionDescriptor": "0x2B3a132630D02EFe8136f1553026C41cc45E8536",
     "DescriptorProxy": "0x545e7e003f795Fa0Daa2E4F38aF16c91a524C892",
-    "NonfungibleTokenDescriptorLibrary": "0x9BDa62581c9E983184A74C5D438b5BAC667B3D34",
+    "NonfungibleTokenDescriptorLibrary": "0x050b6C26d3a8693b0CC36Cd85da4C3c9e5454F56",
     "Multicall": "0xeeb4a1001354717598Af33f3585B66F9de7e7b27"
   },
   "poolInitCodeHash": "0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7"
